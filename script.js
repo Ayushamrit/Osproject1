@@ -41,9 +41,6 @@ function runSchedulingAlgorithm() {
         case 'SJF':
             result = sjf(processes);
             break;
-        case 'SRTF':
-            result = srtf(processes);
-            break;
         case 'Priority':
             result = priorityScheduling(processes);
             break;
@@ -105,44 +102,6 @@ function sjf(processes) {
         } else {
             time++;
         }
-    }
-
-    return { waitingTime: waitingTime / ganttChart.length, turnaroundTime: turnaroundTime / ganttChart.length, ganttChart };
-}
-
-// SRTF Scheduling Algorithm Implementation
-function srtf(processes) {
-    processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
-    let time = 0;
-    let waitingTime = 0;
-    let turnaroundTime = 0;
-    const ganttChart = [];
-    const remainingBurstTimes = processes.map(p => ({ ...p, remaining: p.burstTime }));
-    const readyQueue = [];
-
-    while (remainingBurstTimes.length > 0) {
-        for (const process of remainingBurstTimes) {
-            if (process.arrivalTime <= time && process.remaining > 0) {
-                readyQueue.push(process);
-            }
-        }
-
-        if (readyQueue.length > 0) {
-            readyQueue.sort((a, b) => a.remaining - b.remaining);
-            const process = readyQueue[0];
-            ganttChart.push({ id: process.id, start: time, end: time + 1 });
-            process.remaining--;
-
-            if (process.remaining === 0) {
-                const endTime = time + 1;
-                waitingTime += endTime - process.arrivalTime - process.burstTime;
-                turnaroundTime += endTime - process.arrivalTime;
-                remainingBurstTimes.splice(remainingBurstTimes.indexOf(process), 1);
-            }
-        } else {
-            ganttChart.push({ id: null, start: time, end: time + 1 }); // Idle time
-        }
-        time++;
     }
 
     return { waitingTime: waitingTime / ganttChart.length, turnaroundTime: turnaroundTime / ganttChart.length, ganttChart };
