@@ -173,16 +173,20 @@ function generateGanttChart(ganttChart) {
     let chartHtml = '';
     const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF', '#33FFF5']; // Add more colors if needed
     ganttChart.forEach((segment, index) => {
-        const width = (segment.end - segment.start) * 20; // Increase scale for display
+        const width = (segment.end - segment.start) * 20; // Scale for display
         const color = segment.id ? colors[(segment.id - 1) % colors.length] : 'lightgray'; // Idle time in light gray
-        chartHtml += `<div class="gantt-segment" style="width: ${width}px; background-color: ${color}; border: 1px solid black; padding: 5px; margin: 2px;">
-            <span class="gantt-time">(${segment.start} - ${segment.end})</span>
-        </div>
-        <div class="gantt-label">${segment.id ? 'P' + segment.id : 'Idle'}</div>`;
+        chartHtml += `
+            <div 
+                class="gantt-segment" 
+                style="width: ${width}px; background-color: ${color}; border: 1px solid black; margin: 2px;" 
+                title="Process ${segment.id ? 'P' + segment.id : 'Idle'}: ${segment.start} - ${segment.end}">
+                <span class="gantt-time">${segment.start}</span>
+            </div>
+            <div class="gantt-label">${segment.id ? 'P' + segment.id : 'Idle'}</div>
+        `;
     });
     return chartHtml;
 }
-
 // Add CSS for Gantt chart
 const style = document.createElement('style');
 style.innerHTML = `
