@@ -41,6 +41,9 @@ function runSchedulingAlgorithm() {
         case 'SJF':
             result = sjf(processes);
             break;
+        case 'SRTF':
+            result = srtf(processes);
+            break;
         case 'Priority':
             result = priorityScheduling(processes);
             break;
@@ -107,25 +110,8 @@ function sjf(processes) {
     return { waitingTime: waitingTime / ganttChart.length, turnaroundTime: turnaroundTime / ganttChart.length, ganttChart };
 }
 
-// Priority Scheduling Algorithm Implementation
-function priorityScheduling(processes) {
-    processes.sort((a, b) => a.arrivalTime - b.arrivalTime || a.priority - b.priority);
-    let time = 0;
-    let waitingTime = 0;
-    let turnaroundTime = 0;
-    const ganttChart = [];
+// SRTF Scheduling Algorithm Implementation
 
-    for (const process of processes) {
-        const start = Math.max(time, process.arrivalTime);
-        const end = start + process.burstTime;
-        time = end;
-        waitingTime += start - process.arrivalTime;
-        turnaroundTime += end - process.arrivalTime;
-        ganttChart.push({ id: process.id, start, end });
-    }
-
-    return { waitingTime: waitingTime / processes.length, turnaroundTime: turnaroundTime / processes.length, ganttChart };
-}
 
 // Round Robin Scheduling Algorithm Implementation
 function roundRobin(processes, timeQuantum) {
@@ -187,6 +173,7 @@ function generateGanttChart(ganttChart) {
     });
     return chartHtml;
 }
+
 // Add CSS for Gantt chart
 const style = document.createElement('style');
 style.innerHTML = `
