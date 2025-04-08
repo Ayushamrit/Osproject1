@@ -28,7 +28,7 @@ function runSchedulingAlgorithm() {
         const arrivalTime = parseInt(document.getElementById(`arrivalTime${i}`).value);
         const burstTime = parseInt(document.getElementById(`burstTime${i}`).value);
         const priority = parseInt(document.getElementById(`priority${i}`).value) || 0; // Default priority to 0
-        processes.push({ id: i + 1, arrivalTime, burstTime, priority });
+        processes.push({ id: i + 1, arrivalTime, burstTime, originalBurstTime: burstTime, priority });
     }
 
     const selectedAlgorithm = document.getElementById('algorithm').value;
@@ -45,7 +45,10 @@ function runSchedulingAlgorithm() {
             result = srtf(processes);
             break;
         case 'Priority':
-            result = priorityScheduling(processes);
+            result = priorityScheduling(processes, false); // Non-preemptive
+            break;
+        case 'PriorityPreemptive':
+            result = priorityScheduling(processes, true); // Preemptive
             break;
         case 'RoundRobin':
             const timeQuantum = parseInt(document.getElementById('timeQuantum').value) || 2; // Default time quantum
@@ -111,7 +114,92 @@ function sjf(processes) {
 }
 
 // SRTF Scheduling Algorithm Implementation
+function srtf(processes) {
+    processes.sort((a, b) => a.arrivalTime - b.arrivalTime); // Sort by arrival time
+    let time = 0;
+    let waitingTime = 0;
+    let turnaroundTime = 0;
+    const ganttChart = [];
+    const readyQueue = [];
+    const totalProcesses = processes.length;
 
+    while (processes.length > 0 || readyQueue.length > 0) {
+        // Add processes to the ready queue if they have arrived
+        while (processes.length > 0 && processes[0].arrivalTime <= time) {
+            readyQueue.push(processes.shift());
+        }
+
+        if (readyQueue.length > 0) {
+            // Sort the ready queue by remaining burst time
+            readyQueue.sort((a, b) => a.burstTime - b.burstTime);
+            const process = readyQueue[0];
+            const start = time;
+            const end = start + 1; // Execute for 1 unit of time
+            ganttChart.push({ id: process.id, start, end });
+            time = end;
+            process.burstTime--;
+
+            if (process.burstTime === 0) {
+                readyQueue.shift(); // Remove the process from the ready queue
+                waitingTime += time - process.arrivalTime - process.originalBurstTime; // Correct waiting time
+                turnaroundTime += time - process.arrivalTime;
+            }
+        } else {
+            // If no process is ready, increment time
+            time++;
+        }
+    }
+
+    return {
+        waitingTime: waitingTime / totalProcesses,
+        turnaroundTime: turnaroundTime / totalProcesses,
+        ganttChart,
+    };
+}
+
+// Priority Scheduling Algorithm Implementation (Preemptive and Non-Preemptive)
+function priorityScheduling(processes, isPreemptive) {
+    processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
+    let time = 0;
+    let waitingTime = 0;
+    let turnaroundTime = 0;
+    const ganttChart = [];
+    const readyQueue = [];
+    const totalProcesses = processes.length;
+
+    while (processes.length > 0 || readyQueue.length > 0) {
+        while (processes.length > 0 && processes[0].arrivalTime <= time) {
+            readyQueue.push(processes.shift());
+        }
+
+        if (readyQueue.length > 0) {
+            readyQueue.sort((a, b) => a.priority - b.priority);
+            const process = readyQueue[0];
+            const start = time;
+            const execTime = isPreemptive ? 1 : process.burstTime; // Execute 1 unit for preemptive
+            const end = start + execTime;
+            ganttChart.push({ id: process.id, start, end });
+            time = end;
+            process.burstTime -= execTime;
+
+            if (process.burstTime === 0) {
+                readyQueue.shift();
+                waitingTime += time - process.arrivalTime - process.originalBurstTime; // Correct waiting time
+                turnaroundTime += time - process.arrivalTime;
+            } else if (isPreemptive) {
+                readyQueue.sort((a, b) => a.priority - b.priority); // Re-sort for preemptive
+            }
+        } else {
+            time++;
+        }
+    }
+
+    return {
+        waitingTime: waitingTime / totalProcesses,
+        turnaroundTime: turnaroundTime / totalProcesses,
+        ganttChart,
+    };
+}
 
 // Round Robin Scheduling Algorithm Implementation
 function roundRobin(processes, timeQuantum) {
