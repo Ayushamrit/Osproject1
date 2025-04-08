@@ -1,73 +1,83 @@
 /* General body styling */
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background-color: #f0f2f5;
-    background-image: url("kadyghhl.png");
+    background: linear-gradient(135deg, #56d9b4, #c8e067,#004d40); /* Elegant light gray gradient */
     margin: 0;
     padding: 20px;
     color: #333;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Container styling */
 .container {
-    max-width: 700px;
+    max-width: 800px;
     margin: auto;
-    background: #96e7e9eb;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
 }
 
 .container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Header styling */
 h1 {
     text-align: center;
-    font-size: 2rem;
-    color: #4CAF50;
+    font-size: 2.5rem;
+    color: #00796b;
     margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: fadeIn 1s ease-in-out;
 }
 
 /* Label styling */
 label {
     display: block;
-    margin: 10px 0 5px;
+    margin: 15px 0 5px;
     font-weight: bold;
     color: #555;
+    font-size: 1rem;
 }
 
 /* Input, select, and button styling */
 input, select, button {
     width: 100%;
     padding: 12px;
-    margin: 8px 0;
+    margin: 10px 0;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input:focus, select:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    border-color: #00796b;
+    box-shadow: 0 0 8px rgba(0, 121, 107, 0.5);
     outline: none;
 }
 
 button {
-    background-color: #4CAF50;
+    background: linear-gradient(135deg, #00796b, #004d40);
     color: white;
     border: none;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 button:hover {
-    background-color: #45a049;
+    background: linear-gradient(135deg, #004d40, #00796b);
     transform: scale(1.05);
 }
 
@@ -79,13 +89,14 @@ button:active {
 .gantt-chart {
     display: flex;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 30px;
     overflow-x: auto;
-    padding: 10px;
+    padding: 15px;
     background: #f9f9f9;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1);
+    animation: slideIn 1s ease-in-out;
 }
 
 /* Gantt chart segment */
@@ -99,29 +110,32 @@ button:active {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    height: 40px;
-    line-height: 40px;
-    margin-right: 5px;
-    border-radius: 5px;
-    transition: transform 0.2s ease;
+    height: 50px;
+    line-height: 50px;
+    margin-right: 8px;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #4caf50, #388e3c);
 }
 
 .gantt-segment:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #388e3c, #4caf50);
 }
 
+/* Tooltip for hover */
 .gantt-segment:hover::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 50px;
+    bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 5px 10px;
+    padding: 8px 12px;
     border-radius: 5px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     z-index: 10;
     pointer-events: none;
@@ -134,7 +148,7 @@ button:active {
     display: block;
     text-align: center;
     font-weight: bold;
-    margin-top: 5px;
+    margin-top: 8px;
     font-size: 0.9rem;
     color: #333;
 }
@@ -142,27 +156,50 @@ button:active {
 /* Gantt chart time markers */
 .gantt-time {
     position: absolute;
-    top: -20px;
-    font-size: 0.8rem;
+    top: -25px;
+    font-size: 0.9rem;
     color: #555;
 }
 
 .gantt-time-end {
     position: absolute;
-    top: -20px;
+    top: -25px;
     right: 0;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #555;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
     .container {
-        padding: 15px;
+        padding: 20px;
     }
 
     h1 {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
 
     input, select, button {
@@ -170,7 +207,7 @@ button:active {
     }
 
     .gantt-segment {
-        height: 35px;
-        line-height: 35px;
+        height: 40px;
+        line-height: 40px;
     }
 }
