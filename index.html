@@ -18,8 +18,10 @@
         <label for="algorithm">Select Algorithm:</label>
         <select id="algorithm">
             <option value="FCFS">First Come First Serve</option>
-            <option value="SJF">Shortest Job First</option>
-            <option value="Priority">Priority Scheduling</option>
+            <option value="SJF">Shortest Job First (Non-Preemptive)</option>
+            <option value="SRTF">Shortest Remaining Time First (Preemptive)</option>
+            <option value="Priority">Priority Scheduling (Non-Preemptive)</option>
+            <option value="PriorityPreemptive">Priority Scheduling (Preemptive)</option>
             <option value="RoundRobin">Round Robin</option>
         </select>
         <label for="timeQuantum">Time Quantum (for Round Robin):</label>
