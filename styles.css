@@ -3,10 +3,9 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom,#1c86a0 ,#e0f7fa, #b2ebf2,#10a5b8, #00838f, #006064);
+    background: linear-gradient(to bottom, #7ee007, #05c715,#0a901e,#15bd3f);
     color: #333;
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Header Styles */
@@ -15,7 +14,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(90deg, #1c86a0, #056481, #07d5d5);
+    background: linear-gradient(to bottom, #7ee007, #05c715,#0a901e,#15bd3f);
     color: white;
     text-align: center;
     padding: 15px 0;
@@ -28,12 +27,11 @@ header h1 {
     font-size: 2rem;
     letter-spacing: 1px;
     text-transform: uppercase;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Main Content Styles */
 main {
-    margin-top: 90px; /* Add space to prevent overlap with the fixed header */
+    margin-top: 90px;
     padding: 20px;
     max-width: 1200px;
     margin-left: auto;
@@ -47,12 +45,6 @@ main {
     margin-bottom: 25px;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.input-section:hover, .control-section:hover, .output-section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* Input and Button Styles */
@@ -62,16 +54,9 @@ input, select, button {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
     max-width: 400px;
     display: block;
-}
-
-input:focus, select:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
-    outline: none;
 }
 
 button {
@@ -81,21 +66,16 @@ button {
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
-    transition: background 0.3s ease, transform 0.2s ease;
     width: auto;
     max-width: 200px;
     padding: 12px 20px;
     border: none;
     border-radius: 8px;
+    transition: background 0.3s ease;
 }
 
 button:hover {
     background: linear-gradient(90deg, #388E3C, #2E7D32);
-    transform: scale(1.05);
-}
-
-button:active {
-    transform: scale(0.95);
 }
 
 /* Process List Styles */
@@ -111,63 +91,65 @@ button:active {
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-#process-list li:hover {
-    background-color: #e9ecef;
-    transform: translateX(10px);
+/* Align Buttons Next to Each Other */
+#process-list li .button-group {
+    display: flex;
+    gap: 10px; /* Add spacing between buttons */
 }
 
-#process-list button {
+#process-list li button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#process-list li button.edit-btn {
+    background: #007bff;
+    color: white;
+}
+
+#process-list li button.edit-btn:hover {
+    background: #0056b3;
+}
+
+#process-list li button.remove-btn {
     background: #f44336;
     color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
 }
 
-#process-list button:hover {
+#process-list li button.remove-btn:hover {
     background: #d32f2f;
-    transform: scale(1.1);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    body {
-        margin: 10px;
-    }
-
-    h1 {
-        font-size: 1.8rem;
-    }
-
-    .input-section, .control-section, .output-section {
-        padding: 20px;
-    }
-
-    input, select, button {
-        font-size: 0.9rem;
-    }
+/* Process Status Table Styles */
+#process-status-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.5rem;
-    }
+#process-status-table th, #process-status-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
 
-    input, select, button {
-        font-size: 0.8rem;
-        padding: 10px;
-    }
+#process-status-table th {
+    background: #4CAF50;
+    color: white;
+    text-transform: uppercase;
+}
 
-    button {
-        max-width: 150px;
-    }
+#process-status-table tr:nth-child(even) {
+    background: #f9f9f9;
 }
