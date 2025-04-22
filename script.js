@@ -66,32 +66,34 @@ function simulate(algorithm, quantum) {
     let time = 0;
     let completed = 0;
     let gantt = [];
+    let processStatus = []; // Array to store process status at each time step
 
     if (algorithm === 'fcfs') {
         resultProcesses.forEach(p => {
             if (time < p.arrival) {
-                // Add idle time if the CPU is idle
                 gantt.push({ id: 'idle', start: time, end: p.arrival });
+                processStatus.push({ range: `${time}-${p.arrival}`, process: 'Idle' });
                 time = p.arrival;
             }
             gantt.push({ id: p.id, start: time, end: time + p.burst });
+            processStatus.push({ range: `${time}-${time + p.burst}`, process: `P${p.id}` });
             p.waitingTime = time - p.arrival;
             p.turnaroundTime = p.waitingTime + p.burst;
             time += p.burst;
         });
     } else if (algorithm === 'sjf') {
-        let readyQueue = [];
         while (completed < resultProcesses.length) {
-            readyQueue = resultProcesses.filter(p => p.arrival <= time && !p.completed).sort((a, b) => a.burst - b.burst);
+            let readyQueue = resultProcesses.filter(p => p.arrival <= time && !p.completed).sort((a, b) => a.burst - b.burst);
             if (readyQueue.length === 0) {
-                // Add idle time if the CPU is idle
                 let nextArrival = resultProcesses.find(p => !p.completed)?.arrival || time;
                 gantt.push({ id: 'idle', start: time, end: nextArrival });
+                processStatus.push({ range: `${time}-${nextArrival}`, process: 'Idle' });
                 time = nextArrival;
                 continue;
             }
             let p = readyQueue[0];
             gantt.push({ id: p.id, start: time, end: time + p.burst });
+            processStatus.push({ range: `${time}-${time + p.burst}`, process: `P${p.id}` });
             p.waitingTime = time - p.arrival;
             p.turnaroundTime = p.waitingTime + p.burst;
             time += p.burst;
@@ -102,14 +104,15 @@ function simulate(algorithm, quantum) {
         while (completed < resultProcesses.length) {
             let readyQueue = resultProcesses.filter(p => p.arrival <= time && p.remaining > 0).sort((a, b) => a.remaining - b.remaining);
             if (readyQueue.length === 0) {
-                // Add idle time if the CPU is idle
                 let nextArrival = resultProcesses.find(p => p.remaining > 0)?.arrival || time;
                 gantt.push({ id: 'idle', start: time, end: nextArrival });
+                processStatus.push({ range: `${time}-${nextArrival}`, process: 'Idle' });
                 time = nextArrival;
                 continue;
             }
             let p = readyQueue[0];
             gantt.push({ id: p.id, start: time, end: time + 1 });
+            processStatus.push({ range: `${time}-${time + 1}`, process: `P${p.id}` });
             p.remaining -= 1;
             time += 1;
             if (p.remaining === 0) {
@@ -123,14 +126,15 @@ function simulate(algorithm, quantum) {
         while (completed < resultProcesses.length) {
             let readyQueue = resultProcesses.filter(p => p.arrival <= time && !p.completed).sort((a, b) => a.priority - b.priority);
             if (readyQueue.length === 0) {
-                // Add idle time if the CPU is idle
                 let nextArrival = resultProcesses.find(p => !p.completed)?.arrival || time;
                 gantt.push({ id: 'idle', start: time, end: nextArrival });
+                processStatus.push({ range: `${time}-${nextArrival}`, process: 'Idle' });
                 time = nextArrival;
                 continue;
             }
             let p = readyQueue[0];
             gantt.push({ id: p.id, start: time, end: time + p.burst });
+            processStatus.push({ range: `${time}-${time + p.burst}`, process: `P${p.id}` });
             p.waitingTime = time - p.arrival;
             p.turnaroundTime = p.waitingTime + p.burst;
             time += p.burst;
@@ -141,14 +145,15 @@ function simulate(algorithm, quantum) {
         while (completed < resultProcesses.length) {
             let readyQueue = resultProcesses.filter(p => p.arrival <= time && p.remaining > 0).sort((a, b) => a.priority - b.priority);
             if (readyQueue.length === 0) {
-                // Add idle time if the CPU is idle
                 let nextArrival = resultProcesses.find(p => p.remaining > 0)?.arrival || time;
                 gantt.push({ id: 'idle', start: time, end: nextArrival });
+                processStatus.push({ range: `${time}-${nextArrival}`, process: 'Idle' });
                 time = nextArrival;
                 continue;
             }
             let p = readyQueue[0];
             gantt.push({ id: p.id, start: time, end: time + 1 });
+            processStatus.push({ range: `${time}-${time + 1}`, process: `P${p.id}` });
             p.remaining -= 1;
             time += 1;
             if (p.remaining === 0) {
@@ -164,15 +169,16 @@ function simulate(algorithm, quantum) {
         while (completed < resultProcesses.length) {
             queue = resultProcesses.filter(p => p.arrival <= time && p.remaining > 0);
             if (queue.length === 0) {
-                // Add idle time if the CPU is idle
                 let nextArrival = resultProcesses.find(p => p.remaining > 0)?.arrival || time;
                 gantt.push({ id: 'idle', start: time, end: nextArrival });
+                processStatus.push({ range: `${time}-${nextArrival}`, process: 'Idle' });
                 time = nextArrival;
                 continue;
             }
             let p = queue[idx % queue.length];
             let execTime = Math.min(p.remaining, quantum);
             gantt.push({ id: p.id, start: time, end: time + execTime });
+            processStatus.push({ range: `${time}-${time + execTime}`, process: `P${p.id}` });
             p.remaining -= execTime;
             time += execTime;
             if (p.remaining === 0) {
@@ -186,7 +192,26 @@ function simulate(algorithm, quantum) {
     }
 
     drawGanttChart(gantt);
+    renderProcessStatusTable(processStatus);
     showResults(resultProcesses);
+}
+
+function renderProcessStatusTable(status) {
+    const table = document.getElementById('process-status-table');
+    table.innerHTML = `
+        <tr>
+            <th>Time Range</th>
+            <th>Process</th>
+        </tr>
+    `;
+    status.forEach(entry => {
+        table.innerHTML += `
+            <tr>
+                <td>${entry.range}</td>
+                <td>${entry.process}</td>
+            </tr>
+        `;
+    });
 }
 
 function drawGanttChart(gantt) {
@@ -197,11 +222,7 @@ function drawGanttChart(gantt) {
     const scale = 20;
     let x = 0;
     gantt.forEach(item => {
-        if (item.id === 'idle') {
-            ctx.fillStyle = '#d3d3d3'; // Gray color for idle time
-        } else {
-            ctx.fillStyle = `hsl(${item.id * 60}, 70%, 70%)`;
-        }
+        ctx.fillStyle = item.id === 'idle' ? '#d3d3d3' : `hsl(${item.id * 60}, 70%, 70%)`;
         let width = (item.end - item.start) * scale;
         ctx.fillRect(x, 30, width, 40);
         ctx.strokeRect(x, 30, width, 40);
