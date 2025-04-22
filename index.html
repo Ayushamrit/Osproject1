@@ -3,32 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <title>CPU Scheduling Simulator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>CPU Scheduling Simulator</h1>
-        <form id="processForm">
-            <label for="numProcesses">Number of Processes:</label>
-            <input type="number" id="numProcesses" required>
-            <button type="button" id="createInputsButton">Create Inputs</button>
-        </form>
-        <div id="processInputs"></div>
-        <label for="algorithm">Select Algorithm:</label>
-        <select id="algorithm">
-            <option value="FCFS">First Come First Serve</option>
-            <option value="SJF">Shortest Job First (Non-Preemptive)</option>
-            <option value="SRTF">Shortest Remaining Time First (Preemptive)</option>
-            <option value="Priority">Priority Scheduling (Non-Preemptive)</option>
-            <option value="PriorityPreemptive">Priority Scheduling (Preemptive)</option>
-            <option value="RoundRobin">Round Robin</option>
-        </select>
-        <label for="timeQuantum">Time Quantum (for Round Robin):</label>
-        <input type="number" id="timeQuantum" value="2">
-        <button id="runSimulationButton">Run Simulation</button>
-        <div id="results"></div>
-    </div>
+    </header>
+
+    <main>
+        <div class="input-section">
+            <form id="process-form">
+                <label for="arrival-time">Arrival Time:</label>
+                <input type="number" id="arrival-time" required>
+                <label for="burst-time">Burst Time:</label>
+                <input type="number" id="burst-time" required>
+                <label for="priority">Priority (optional):</label>
+                <input type="number" id="priority">
+                <button type="submit">Add Process</button>
+            </form>
+            <button id="clear-processes">Clear All Processes</button>
+        </div>
+
+        <div class="control-section">
+            <label for="algorithm-select">Select Algorithm:</label>
+            <select id="algorithm-select">
+                <option value="fcfs">First Come First Serve (FCFS)</option>
+                <option value="sjf">Shortest Job First (SJF)</option>
+                <option value="srtf">Shortest Remaining Time First (SRTF)</option>
+                <option value="priority">Priority (Non-Preemptive)</option>
+                <option value="priority-pre">Priority (Preemptive)</option>
+                <option value="rr">Round Robin (RR)</option>
+            </select>
+            <div id="quantum-input" style="display: none;">
+                <label for="quantum">Quantum:</label>
+                <input type="number" id="quantum" value="1" min="1">
+            </div>
+            <button id="simulate-btn">Simulate</button>
+        </div>
+
+        <div class="output-section">
+            <h3>Processes</h3>
+            <ul id="process-list"></ul>
+            <canvas id="gantt-chart" width="800" height="150"></canvas>
+            <div id="results"></div>
+        </div>
+    </main>
+
     <script src="script.js"></script>
 </body>
 </html>
